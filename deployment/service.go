@@ -13,10 +13,10 @@ type Service struct {
 	urlBase string
 }
 
-func NewService(client *http.Client, urlBase string) *Service {
-	return &Service{
+func NewService(client *http.Client, url string) Service {
+	return Service{
 		client:  client,
-		urlBase: urlBase,
+		urlBase: url,
 	}
 }
 
