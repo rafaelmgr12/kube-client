@@ -2,9 +2,11 @@ package deployment
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/rafaelmgr12/kube-client/errors"
 )
 
@@ -20,17 +22,29 @@ func NewService(client *http.Client, url string) Service {
 	}
 }
 
-func (s *Service) CreateDeployment(deployment *Deployment) (*Deployment, error) {
+func (s *Service) CreateDeployment(ctx context.Context, deployment Deployment) (*Deployment, error) {
 	body, err := json.Marshal(deployment)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := s.client.Post(s.urlBase+"/deployments", "application/json", bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.urlBase+"/deployments", bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := s.client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
 	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusBadRequest {
+		return nil, errors.FromBadRequest(resp)
+	}
 
 	if resp.StatusCode != http.StatusCreated {
 		return nil, errors.FromHTTPResponse(resp)
@@ -44,8 +58,9 @@ func (s *Service) CreateDeployment(deployment *Deployment) (*Deployment, error) 
 	return &createdDeployment, nil
 }
 
-func (s *Service) DeleteDeployment(id string) error {
-	req, err := http.NewRequest(http.MethodDelete, s.urlBase+"/deployments/"+id, nil)
+func (s *Service) DeleteDeployment(ctx context.Context, id string) error {
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, s.urlBase+"/deployments/"+id, nil)
 	if err != nil {
 		return err
 	}
@@ -63,21 +78,32 @@ func (s *Service) DeleteDeployment(id string) error {
 	return nil
 }
 
-func (s *Service) GetDeployment(id string) (*Deployment, error) {
-	resp, err := s.client.Get(s.urlBase + "/deployments/" + id)
+func (s *Service) GetDeployment(ctx context.Context, id string) (*Deployment, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.urlBase+"/deployments/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
 	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, errors.NewNotFound(uuid.MustParse(id), "deployment")
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.FromHTTPResponse(resp)
 	}
 
-	var deployment Deployment
-	if err := json.NewDecoder(resp.Body).Decode(&deployment); err != nil {
+	deploy := Deployment{}
+	if err := json.NewDecoder(resp.Body).Decode(&deploy); err != nil {
 		return nil, err
 	}
 
-	return &deployment, nil
+	return &deploy, nil
+
 }
