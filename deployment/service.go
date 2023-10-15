@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/rafaelmgr12/kube-client/errors"
+	"github.com/rafaelmgr12/kube-client/kube/errors"
 )
 
 type Service struct {
