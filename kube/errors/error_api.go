@@ -59,9 +59,7 @@ func FromBadRequest(resp *http.Response) InvalidResource {
 
 	extras := []string{}
 	if failedFields, ok := r.Extras["failed_fields"]; ok {
-		for _, f := range failedFields {
-			extras = append(extras, f)
-		}
+		extras = append(extras, failedFields...)
 	}
 
 	return InvalidResource{
