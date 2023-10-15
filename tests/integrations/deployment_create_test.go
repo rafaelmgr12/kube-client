@@ -9,9 +9,10 @@ import (
 	"slices"
 
 	"github.com/google/uuid"
-	"github.com/rafaelmgr12/kube-client"
+
 	"github.com/rafaelmgr12/kube-client/deployment"
-	"github.com/rafaelmgr12/kube-client/errors"
+	"github.com/rafaelmgr12/kube-client/kube"
+	"github.com/rafaelmgr12/kube-client/kube/errors"
 )
 
 const url = "http://localhost:3000"

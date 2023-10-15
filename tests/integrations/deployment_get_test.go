@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/rafaelmgr12/kube-client"
 	"github.com/rafaelmgr12/kube-client/deployment"
-	ierrors "github.com/rafaelmgr12/kube-client/errors"
+	"github.com/rafaelmgr12/kube-client/kube"
+	ierrors "github.com/rafaelmgr12/kube-client/kube/errors"
 )
 
 func TestGetDeployment(t *testing.T) {

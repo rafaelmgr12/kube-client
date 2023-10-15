@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/rafaelmgr12/kube-client"
 	"github.com/rafaelmgr12/kube-client/deployment"
+	"github.com/rafaelmgr12/kube-client/kube"
 )
 
 func TestDeleteDeployment(t *testing.T) {
