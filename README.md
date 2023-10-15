@@ -74,6 +74,6 @@ err := client.DeleteDeployment(deploymentID)
 
 
 ```
-
+For more detailed documentation, please refer to the [Detailed Documentation](https://github.com/rafaelmgr12/kube-client/blob/master/docs/Documention.md).
 ## 📄 License
 The projects is under the MIT license. See the file [LICENSE](LICENSE) fore more details
