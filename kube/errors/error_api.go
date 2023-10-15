@@ -9,6 +9,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type NotFoundResponseBody struct {
+	ID       uuid.UUID `json:"id"`
+	Resource string    `json:"resource"`
+}
+
 type ResponseError struct {
 	StatusCode int
 	Message    string `json:"message"`
