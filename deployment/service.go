@@ -59,7 +59,6 @@ func (s *Service) CreateDeployment(ctx context.Context, deployment Deployment) (
 }
 
 func (s *Service) DeleteDeployment(ctx context.Context, id string) error {
-	// Verificar se o contexto já foi cancelado antes de iniciar a operação
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
@@ -77,7 +76,6 @@ func (s *Service) DeleteDeployment(ctx context.Context, id string) error {
 	}
 	defer resp.Body.Close()
 
-	// Verificar novamente após a chamada HTTP, caso o contexto tenha sido cancelado durante a chamada
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
